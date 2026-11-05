@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-app-back-deployment-jenkins
+spec:
+  selector:
+   matchLabels:
+    app: billing-app-back-jenkins
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: billing-app-back-jenkins
+    spec:
+      containers:
+        - name: billing-app-back-jenkins
+          image: laurasaree/billingapp
+          ports:
+            - containerPort: 7080
+              name: billingappbport
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: billing-app-back-service-jenkins
+  labels:
+    app: billing-app-back-jenkins
+spec:   
+  ports:
+  - name: billing-app-back-jenkins
+    port: 7080
+    nodePort : 31780 
+  #type: LoadBalancer
+  type: NodePort
+  selector:
+   app: billing-app-back-jenkins
